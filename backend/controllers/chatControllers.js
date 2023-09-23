@@ -90,6 +90,48 @@ const fetchChats = asyncHandler(async (req, res) => {
 });
 
 
+// route responsible for creating a group chat
 
+const createGroupChat = asyncHandler(async (req, res) => {
+
+    if(!req.body.users || !req.body.chatName){
+        res.status(400);
+        throw new Error('Please provide users and chat name');
+    }
+
+    const users = JSON.parse(req.body.users); // parse the stringified users array
+
+    if(users.length < 2){
+        res.status(400);
+        throw new Error('Please provide users');
+    }
+
+    users.push(req.user); // add the loggedin user to the users array
+
+    // create the group chat
+
+    try{
+
+        var groupChat = await Chat.create({
+            isGroupChat: true,
+            chatName: req.body.chatName,
+            users: users,
+            groupAdmin: req.user
+        });
+    
+        const fullChat = await Chat.findById(groupChat._id)
+                                .populate('users', '-password')
+                                .populate('groupAdmin', '-password');
+    
+        res.status(201).json(fullChat);
+
+    }catch(err){
+        console.log(err);
+    }
+
+});
+
+
+exports.createGroupChat = createGroupChat;
 exports.fetchChats = fetchChats;
 exports.accessChat = accessChat;
