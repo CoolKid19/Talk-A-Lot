@@ -11,4 +11,4 @@ const chatSchema = new Schema({
 
 const Chat = mongoose.model("Chat", chatSchema); // "Chat" is the name of the collection in the database
 
-Chat.export = Chat; // export the Chat model
+exports.Chat = Chat; // export the Chat model

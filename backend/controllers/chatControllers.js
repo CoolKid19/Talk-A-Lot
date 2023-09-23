@@ -7,7 +7,7 @@ const {Chat} = require('../models/chatModel');
 // route responsible for creating or fetching a chat
 
 const accessChat = asyncHandler(async (req, res) => {
-    console.log("dsfsd");
+    
    const {userId} = req.body; // loggedin user will provide the id of the user he wants to chat with
 
    if(!userId){ // if not provided
@@ -18,12 +18,11 @@ const accessChat = asyncHandler(async (req, res) => {
    // check if the chat already exists
    var isChat = await Chat.find({
     isGroupChat: false,
-    users: {
-        $and: [
-            { users: {$elemMatch: {$eq: req.user._id}} },
-            { users: {$elemMatch: {$eq: userId}} }
-        ]
-    }
+    $and: [
+        { users: {$elemMatch: {$eq: req.user._id}} },
+        { users: {$elemMatch: {$eq: userId}} }
+    ]
+    
    }).populate('users', '-password')
         .populate('latestMessage');
 
@@ -59,4 +58,38 @@ const accessChat = asyncHandler(async (req, res) => {
 
 });
 
+// route responsible for fetching all chats of a user
+
+const fetchChats = asyncHandler(async (req, res) => {
+
+    try{
+        console.log(req);
+        const chats = await Chat.find({
+            users: {$elemMatch: {$eq: req.user._id}}
+        })
+        .populate('users', '-password')
+        .populate('groupAdmin', '-password')
+        .populate('latestMessage')
+        .sort({updatedAt: -1})
+        .then(async (results) => {
+            results = await User.populate(results, // populate the sender field of the latestMessage field of the chat with the user data
+                {
+                    path: 'latestMessage.sender',
+                    select: 'name pic email'
+                });
+
+            res.status(200).json(results);
+        });
+
+    }catch(err){
+        console.log(err);
+    }
+
+
+
+});
+
+
+
+exports.fetchChats = fetchChats;
 exports.accessChat = accessChat;
