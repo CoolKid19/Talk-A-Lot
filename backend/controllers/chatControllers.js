@@ -131,7 +131,44 @@ const createGroupChat = asyncHandler(async (req, res) => {
 
 });
 
+// route responsible for renaming a group chat
 
+const renameGroup = asyncHandler(async (req, res) => {
+
+    const {chatId, chatName} = req.body;
+
+    if(!chatId || !chatName){
+        res.status(400);
+        throw new Error('Please provide chat id and chat name');
+    }
+
+    try{
+
+        const updatedchat = await Chat.findByIdAndUpdate(chatId, {
+            chatName: chatName
+        }, {
+            new: true
+        })
+        .populate('users', '-password')
+        .populate('groupAdmin', '-password');
+        
+        if(!updatedchat){
+            res.status(400);
+            throw new Error('Chat not found');
+        }else{
+            res.status(200).json(updatedchat);
+        }
+
+        
+
+    }catch(err){
+        console.log(err);
+    }
+
+
+});
+
+exports.renameGroup = renameGroup;
 exports.createGroupChat = createGroupChat;
 exports.fetchChats = fetchChats;
 exports.accessChat = accessChat;
