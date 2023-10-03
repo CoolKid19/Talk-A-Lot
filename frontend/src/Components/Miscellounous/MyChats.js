@@ -4,6 +4,7 @@ import { Box, Button, Grid, Spacer, Stack, Text, useToast } from '@chakra-ui/rea
 import { AddIcon } from '@chakra-ui/icons';
 import ChatLoading from './ChatLoading';
 import getSender from '../../config/ChatLogics';
+import GroupChatModal from './GroupChatModal';
 
 const MyChats = () => {
 
@@ -90,13 +91,15 @@ overflow={"hidden"}
   w={"100%"}
 >
   <Box>My Chats</Box>
+  <GroupChatModal>
   <Button
     d="flex"
     fontSize={{ base: "17px", md: "10px", lg: "17px" }}
     rightIcon={<AddIcon />}
-  >
+    >
     New Group Chat
   </Button>
+    </GroupChatModal>
 </Grid>
 
 <Box
