@@ -1,0 +1,146 @@
+import React, { useEffect, useState } from 'react'
+import { ChatState } from '../../Context/chatProvider';
+import { Box, Button, Grid, Spacer, Stack, Text, useToast } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
+import ChatLoading from './ChatLoading';
+import getSender from '../../config/ChatLogics';
+
+const MyChats = () => {
+
+  const {user, chats, setChats, setSelectedChat, selectedChat} = ChatState();
+  const [loggedUser, setLoggedUser] = useState(null);
+
+  const toast = useToast();
+
+  
+  const fetchChats = async () => {
+    
+    try{
+      //  console.log(user);
+        const data = await fetch(`/api/chat`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`
+          }
+        });
+  
+        const result = await data.json();
+  
+        if(result){
+          console.log(result);
+          setChats(result);
+        }else{
+          toast({
+            title: "Error1",
+            description: result.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+  
+      }catch(err){
+    console.log(err);
+    toast({
+      title: "Error",
+      description: "Failed to load chats",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom-left"
+    });
+  }
+
+}
+
+useEffect(() => {
+  setLoggedUser(JSON.parse(localStorage.getItem('userInfo')));
+  fetchChats();
+
+}, []);
+
+
+
+
+  
+
+  return (
+
+   <Box
+    d = {{base: selectedChat===null ? "none" : "flex", md: "flex"}}
+    flexDirection={"column"}
+    alignItems={"center"}
+    w={{base: "100%", md: "31%"}}
+    //backgroundColor={"#2A2D34"}
+    bg="white"
+    borderRadius={"lg"}
+    borderWidth={"1px"}
+    p={3}
+    overflow={"hidden"}
+   >
+
+<Grid
+  templateColumns="1fr auto"
+  gap={3}
+  pb={3}
+  px={3}
+  fontSize={{ base: "28px", md: "30px" }}
+  fontFamily={"Work sans"}
+  alignItems={"center"}
+  w={"100%"}
+>
+  <Box>My Chats</Box>
+  <Button
+    d="flex"
+    fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+    rightIcon={<AddIcon />}
+  >
+    New Group Chat
+  </Button>
+</Grid>
+
+<Box
+  d="flex"
+  flexDirection={"column"}
+  w={"100%"}
+  h={"100%"}
+  p={3}
+  bg="#F8F8F8"
+  borderRadius="lg"
+  overflowY="hidden" // Apply overflowY to the outer Box
+>
+  {chats ? (
+    <Stack
+      overflowY={"scroll"} // Apply overflowY here for the chat list
+      maxHeight="100%" // Set a maximum height for the chat list
+    >
+      {chats.map((chat) => (
+        <Box
+          onClick={() => setSelectedChat(chat)}
+          cursor={"pointer"}
+          bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
+          color={selectedChat === chat ? "white" : "black"}
+          px={3}
+          py={2}
+          borderRadius={"lg"}
+          key={chat._id}
+        >
+          <Text>
+            {!chat.isGroupChat
+              ? getSender(loggedUser, chat.users)
+              : chat.chatName}
+          </Text>
+        </Box>
+      ))}
+    </Stack>
+  ) : (
+    <ChatLoading />
+  )}
+</Box>
+
+   </Box>
+  )
+}
+
+export default MyChats
