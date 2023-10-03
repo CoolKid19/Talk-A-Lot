@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 
 const {User} = require('../models/userModel');
 const {Chat} = require('../models/chatModel');
+const e = require('express');
 
 
 // route responsible for creating or fetching a chat
@@ -168,6 +169,54 @@ const renameGroup = asyncHandler(async (req, res) => {
 
 });
 
+// route responsible for adding a user to a group chat
+
+const addToGroup = asyncHandler(async (req, res) => {
+
+    const {chatId, userId} = req.body;
+
+    const added = await Chat.findByIdAndUpdate(chatId, {
+        $push: {users: userId}
+    }, {
+        new: true
+    })
+    .populate('users', '-password')
+    .populate('groupAdmin', '-password');
+
+    if(!added){
+        res.status(400);
+        throw new Error('Chat not found');
+    }else{
+        res.status(200).json(added);
+    }
+
+});
+
+// route responsible for removing a user from a group chat
+
+const removeFromGroup = asyncHandler(async (req, res) => {
+
+    const {chatId, userId} = req.body;
+
+    const removed = await Chat.findByIdAndUpdate(chatId, {
+        $pull: {users: userId}
+    }, {
+        new: true
+    })
+    .populate('users', '-password')
+    .populate('groupAdmin', '-password');
+
+    if(!removed){
+        res.status(400);
+        throw new Error('Chat not found');
+    }else{
+        res.status(200).json(removed);
+    }
+
+});
+
+exports.removeFromGroup = removeFromGroup;
+exports.addToGroup = addToGroup;
 exports.renameGroup = renameGroup;
 exports.createGroupChat = createGroupChat;
 exports.fetchChats = fetchChats;
