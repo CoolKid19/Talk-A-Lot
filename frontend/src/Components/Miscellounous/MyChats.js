@@ -67,19 +67,18 @@ useEffect(() => {
 
   return (
 
-   <Box
-    d = {{base: selectedChat===null ? "none" : "flex", md: "flex"}}
-    flexDirection={"column"}
-    alignItems={"center"}
-    w={{base: "100%", md: "31%"}}
-    //backgroundColor={"#2A2D34"}
-    bg="white"
-    borderRadius={"lg"}
-    borderWidth={"1px"}
-    p={3}
-    overflow={"hidden"}
-   >
 
+<Box
+d={{ base: selectedChat === null ? "none" : "flex", md: "flex" }}
+flexDirection={"column"}
+alignItems={"center"}
+w={{ base: "100%", md: "31%" }}
+bg="white"
+borderRadius={"lg"}
+borderWidth={"1px"}
+p={3}
+overflow={"hidden"}
+>
 <Grid
   templateColumns="1fr auto"
   gap={3}
@@ -112,8 +111,8 @@ useEffect(() => {
 >
   {chats ? (
     <Stack
-      overflowY={"scroll"} // Apply overflowY here for the chat list
-      maxHeight="100%" // Set a maximum height for the chat list
+      overflowY={"auto"} // Use "auto" for automatic scrolling
+      maxHeight="calc(100vh - 180px)" // Adjust the maximum height as needed
     >
       {chats.map((chat) => (
         <Box
@@ -138,8 +137,7 @@ useEffect(() => {
     <ChatLoading />
   )}
 </Box>
-
-   </Box>
+</Box>
   )
 }
 
