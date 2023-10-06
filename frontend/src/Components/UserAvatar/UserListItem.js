@@ -1,11 +1,8 @@
 import React from 'react'
 
 import { Avatar, Box, Text } from '@chakra-ui/react';
-import { color } from 'framer-motion';
 
 const UserListItem = ({user, handleFunction}) => {
-
-    
 
   return (
     <Box
@@ -21,7 +18,7 @@ const UserListItem = ({user, handleFunction}) => {
             
         }
         
-        color={"black"}
+        color="black"
         alignItems={"center"}
         padding={"20px"}
         width={"100%"}

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { ChatState } from '../../Context/chatProvider';
-import { Box, Button, Grid, Spacer, Stack, Text, useToast } from '@chakra-ui/react';
+import { ChatState } from '../Context/chatProvider';
+import { Box,  Stack, Text } from '@chakra-ui/layout';
+import { Button, Grid } from "@chakra-ui/react"
+import { useToast } from "@chakra-ui/toast"
 import { AddIcon } from '@chakra-ui/icons';
-import ChatLoading from './ChatLoading';
-import getSender from '../../config/ChatLogics';
-import GroupChatModal from './GroupChatModal';
+import ChatLoading from './Miscellounous/ChatLoading';
+import getSender from '../config/ChatLogics';
+import GroupChatModal from './Miscellounous/GroupChatModal';
 
 const MyChats = () => {
 
   const {user, chats, setChats, setSelectedChat, selectedChat} = ChatState();
-  const [loggedUser, setLoggedUser] = useState(null);
+  const [loggedUser, setLoggedUser] = useState();
 
   const toast = useToast();
 
@@ -42,7 +44,7 @@ const MyChats = () => {
         }
   
       }catch(err){
-    console.log(err);
+  //  console.log(err);
     toast({
       title: "Error",
       description: "Failed to load chats",
@@ -70,15 +72,15 @@ useEffect(() => {
 
 
 <Box
-d={{ base: selectedChat === null ? "none" : "flex", md: "flex" }}
-flexDirection={"column"}
-alignItems={"center"}
-w={{ base: "100%", md: "31%" }}
-bg="white"
-borderRadius={"lg"}
-borderWidth={"1px"}
-p={3}
-overflow={"hidden"}
+  d={{ base: selectedChat === null ? "none" : "flex", md: "flex" }}
+  flexDirection={"column"}
+  alignItems={"center"}
+  w={{ base: "100%", md: "31%" }}
+  bg="white"
+  borderRadius={"lg"}
+  borderWidth={"1px"}
+  p={3}
+  overflow={"hidden"} // Hide the scrollbars
 >
 <Grid
   templateColumns="1fr auto"

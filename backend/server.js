@@ -5,6 +5,7 @@ const cors = require('cors');
 const {connectDB} = require('./config/db');
 const {userRoutes} = require('./routes/userRoutes');
 const {chatRoutes} = require('./routes/chatRoutes');
+//const {notFound, errorHandler} = require('./middleware/errorMiddleware');
 dotenv.config();
 
 connectDB();
@@ -14,6 +15,8 @@ const app = express();
 app.use(cors()); // to allow cross origin requests
 
 app.use(express.json()); // to parse json data in the body of the request
+
+
 
 app.get('/', (req, res) => {
     res.send('API is running...');
@@ -40,6 +43,11 @@ app.use('/api/chat', chatRoutes);
 
 
 // });
+
+//Error Handling middlewares
+// app.use(notFound);
+// app.use(errorHandler);
+
 
 const PORT = process.env.PORT || 5000;
 
