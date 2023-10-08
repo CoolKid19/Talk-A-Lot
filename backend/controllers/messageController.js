@@ -49,10 +49,19 @@ const sendMessage = asyncHandler(async (req, res) => {
 
 const allMessages = asyncHandler(async (req, res) => {
 
+    try{
+        const messages = await Message.find({chat: req.params.chatId})
+        .populate("sender", "name pic email")
+        .populate("chat");
 
+        res.status(200).json(messages);
 
-
-
+    }catch(err){
+        console.log(err);
+        console.log('Server Error 302');
+        res.status(500);
+        throw new Error('Server Error 302');
+    }
 
 });
 
