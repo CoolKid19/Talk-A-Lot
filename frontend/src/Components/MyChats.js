@@ -8,7 +8,7 @@ import ChatLoading from './Miscellounous/ChatLoading';
 import getSender from '../config/ChatLogics';
 import GroupChatModal from './Miscellounous/GroupChatModal';
 
-const MyChats = () => {
+const MyChats = ( {fetchAgain} ) => {
 
   const {user, chats, setChats, setSelectedChat, selectedChat} = ChatState();
   const [loggedUser, setLoggedUser] = useState();
@@ -61,7 +61,7 @@ useEffect(() => {
   setLoggedUser(JSON.parse(localStorage.getItem('userInfo')));
   fetchChats();
 
-}, []);
+}, [fetchAgain]);
 
 
 
@@ -72,15 +72,15 @@ useEffect(() => {
 
 
 <Box
-  d={{ base: selectedChat === null ? "none" : "flex", md: "flex" }}
-  flexDirection={"column"}
-  alignItems={"center"}
+  display={{ base: Object.keys(selectedChat).length === 0 ? "flex" : "none", md: "flex" }}
+  flexDirection="column"
+  alignItems="center"
   w={{ base: "100%", md: "31%" }}
   bg="white"
-  borderRadius={"lg"}
-  borderWidth={"1px"}
+  borderRadius="lg"
+  borderWidth="1px"
   p={3}
-  overflow={"hidden"} // Hide the scrollbars
+  overflow="hidden" // Hide the scrollbars
 >
 <Grid
   templateColumns="1fr auto"
