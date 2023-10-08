@@ -7,3 +7,6 @@ const sendMessage = asyncHandler(async (req, res) => {
 const allMessages = asyncHandler(async (req, res) => {
     
 });
+
+exports.sendMessage = sendMessage;
+exports.allMessages = allMessages;

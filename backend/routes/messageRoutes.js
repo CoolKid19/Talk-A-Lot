@@ -1,4 +1,4 @@
-const {getMessages, addMessage} = require('../controllers/messageController.js');
+const {sendMessage, allMessages} = require('../controllers/messageController.js');
 
 const express = require('express');
 const { protect } = require('../middleware/authMiddleware.js');
