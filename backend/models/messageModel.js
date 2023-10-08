@@ -10,4 +10,4 @@ const messageSchema = new Schema({
 
 const Message = mongoose.model("Message", messageSchema); // "Message" is the name of the collection in the database
 
-Message.export = Message; // export the Message model
+exports.Message = Message; // export the Message model
