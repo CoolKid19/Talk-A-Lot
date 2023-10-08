@@ -9,7 +9,7 @@ const ChatProvider = ({children}) => {
 
     const [user, setUser] = useState(null);
     const [chats, setChats] = useState([]);
-    const [selectedChat, setSelectedChat] = useState([]);
+    const [selectedChat, setSelectedChat] = useState({});
     
 
     // when we created login and signu up we stored user info in local storage
