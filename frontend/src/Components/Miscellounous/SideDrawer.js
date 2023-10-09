@@ -95,7 +95,7 @@ const SideDrawer = () => {
 
             setLoading(true);
 
-            const res = await fetch(`/api/user?search=${search}`, {
+            const res = await fetch(`http://localhost:5000/api/user?search=${search}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

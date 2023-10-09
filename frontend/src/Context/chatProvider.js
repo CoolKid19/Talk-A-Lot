@@ -32,7 +32,7 @@ const ChatProvider = ({children}) => {
 
         }else{
 
-            //history.go('/');
+            history.push('/');
 
         }
 

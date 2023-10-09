@@ -20,7 +20,7 @@ const MyChats = ( {fetchAgain} ) => {
     
     try{
       //  console.log(user);
-        const data = await fetch(`/api/chat`, {
+        const data = await fetch(`http://localhost:5000/api/chat`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

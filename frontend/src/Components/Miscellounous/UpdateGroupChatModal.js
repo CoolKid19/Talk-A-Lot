@@ -6,7 +6,7 @@ import UserBadgeItem from '../UserAvatar/UserBadgeItem';
 import UserListItem from '../UserAvatar/UserListItem';
 
 
-const UpdateGroupChatModal = ({fetchAgain, setFetchAgain}) => {
+const UpdateGroupChatModal = ({fetchAgain, setFetchAgain, fetchMessages}) => {
   
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [groupChatName, setGroupChatName] = useState('');
@@ -35,7 +35,7 @@ const UpdateGroupChatModal = ({fetchAgain, setFetchAgain}) => {
 
     try{
 
-        const data = await fetch(`/api/chat/groupremove`, {
+        const data = await fetch(`http://localhost:5000/api/chat/groupremove`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,6 +59,7 @@ const UpdateGroupChatModal = ({fetchAgain, setFetchAgain}) => {
                 duration: 2000,
                 isClosable: true,
             })
+            fetchMessages();
             setLoading(false);
         }
 
@@ -87,7 +88,7 @@ const UpdateGroupChatModal = ({fetchAgain, setFetchAgain}) => {
 
           setRenameLoading(true);
 
-          const res = await fetch('/api/chat/rename', {
+          const res = await fetch('http://localhost:5000/api/chat/rename', {
 
                 method: 'PUT',
                 headers: {
@@ -136,7 +137,7 @@ const UpdateGroupChatModal = ({fetchAgain, setFetchAgain}) => {
     try{
         setLoading(true);
 
-        const res = await fetch(`/api/user?search=${search}`, {
+        const res = await fetch(`http://localhost:5000/api/user?search=${search}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -195,7 +196,7 @@ const UpdateGroupChatModal = ({fetchAgain, setFetchAgain}) => {
         try{
 
             setLoading(true);
-            const data = await fetch(`/api/chat/groupadd`, {
+            const data = await fetch(`http://localhost:5000/api/chat/groupadd`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

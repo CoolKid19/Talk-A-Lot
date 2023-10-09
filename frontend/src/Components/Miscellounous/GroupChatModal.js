@@ -30,7 +30,7 @@ const GroupChatModal = ({children}) => {
             
             setLoading(true);
 
-            const data = await fetch(`/api/user?search=${search}`, {
+            const data = await fetch(`http://localhost:5000/api/user?search=${search}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const GroupChatModal = ({children}) => {
             }
 
             try{
-              const data = await fetch(`/api/chat/group`, {
+              const data = await fetch(`http://localhost:5000/api/chat/group`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
