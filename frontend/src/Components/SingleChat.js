@@ -20,7 +20,7 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
 
     const fetchMessages = async () => {
 
-      if(!selectedChat) return;
+      if(selectedChat.length===0) return;
 
       try{
         
