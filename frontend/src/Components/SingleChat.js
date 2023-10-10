@@ -7,6 +7,10 @@ import ProfileModal from './Miscellounous/ProfileModal';
 import UpdateGroupChatModal from './Miscellounous/UpdateGroupChatModal';
 import ScrollableChat from './ScrollableChat';
 import './style.css'
+import io from 'socket.io-client';
+
+const ENDPOINT = 'http://localhost:5000';
+var socket, selectedChatCompare;
 
 const SingleChat = ({fetchAgain , setFetchAgain}) => {
 
@@ -15,12 +19,20 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState('');
+    const [socketConnected, setSocketConnected] = useState(false);
 
     const toast = useToast();
 
+    useEffect(() => {
+      socket = io(ENDPOINT);
+      socket.emit('setup', user);
+      socket.on('connection',() => setSocketConnected(true));
+
+    }, []);
+
     const fetchMessages = async () => {
 
-      if(selectedChat.length===0) return;
+      if (Object.keys(selectedChat).length === 0) return;
 
       try{
         
@@ -36,6 +48,8 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
         console.log(messages);
         setMessages(res);
         setLoading(false);
+
+        socket.emit('join chat', selectedChat._id); // with the id of this chat users can join this room
 
       }catch(err) {
 
@@ -56,7 +70,30 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
 
     useEffect(() => {
       fetchMessages();
+
+      selectedChatCompare = selectedChat; // to keep backup of whatever selectedchat is 
+      // to decide if should emit the message or give noti to user
+
+
+
+
     }, [selectedChat]);
+
+    useEffect(() => {
+      socket.on("message recieved", ( newMessageRecieved) => {
+
+        if(Object.keys(selectedChatCompare).length === 0 || 
+          selectedChatCompare._id !== newMessageRecieved.chat._id){
+            //give notification
+          }else{
+            // emit the message
+          //  console.log("why not emitting");
+            setMessages([...messages, newMessageRecieved]);
+          }
+    
+    })
+
+  });
 
     const sendMessage = async (e) => {
         if(e.key === 'Enter' && newMessage !== '') {
@@ -78,6 +115,7 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
               });
 
               const res = await data.json();
+              socket.emit('new message', res);
               setMessages([...messages, res]);
 
               console.log(res);
@@ -99,6 +137,8 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
 
         }
     }
+
+    
 
     const typingHandler = (e) => {
       setNewMessage(e.target.value);
