@@ -77,6 +77,15 @@ io.on("connection", (socket) => {
         console.log("User Joined Room: " + room);
     });
 
+    socket.on("typing", (room) => {
+        console.log("typing")
+        socket.in(room).emit("typing");
+    });
+
+    socket.on("stop typing", (room) => {
+        socket.in(room).emit("stop typing");
+    });
+
     socket.on("new message", (newMessageRecieved) => {
 
         // supposed to manage these messages first and send them to above created rooms first
@@ -93,5 +102,10 @@ io.on("connection", (socket) => {
         });
         
     });
+
+    socket.off("setup", () => {
+        console.log("UsSER DISCONNECTED");
+        socket.leave(userData._id);
+    })
 
 });
