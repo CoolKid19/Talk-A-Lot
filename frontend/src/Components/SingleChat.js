@@ -15,7 +15,7 @@ var socket, selectedChatCompare;
 
 const SingleChat = ({fetchAgain , setFetchAgain}) => {
 
-    const {user, selectedChat, setSelectedChat} = ChatState();
+    const {user, selectedChat, setSelectedChat, notification, setNotification} = ChatState();
 
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -83,13 +83,19 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
 
 
     }, [selectedChat]);
-
+  
     useEffect(() => {
       socket.on("message recieved", ( newMessageRecieved) => {
 
         if(Object.keys(selectedChatCompare).length === 0 || 
           selectedChatCompare._id !== newMessageRecieved.chat._id){
             //give notification
+
+            if(!notification.includes(newMessageRecieved)){
+              setNotification([...notification, newMessageRecieved]);
+              setFetchAgain(!fetchAgain);
+            }
+
           }else{
             // emit the message
           //  console.log("why not emitting");
@@ -149,7 +155,7 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
       setNewMessage(e.target.value);
       // typing Indicator logic
 
-      console.log("typing")
+     // console.log("typing")
 
       if(!socketConnected)return;
 

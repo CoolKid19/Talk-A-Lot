@@ -10,6 +10,7 @@ const ChatProvider = ({children}) => {
     const [user, setUser] = useState(null);
     const [chats, setChats] = useState([]);
     const [selectedChat, setSelectedChat] = useState({});
+    const [notification, setNotification] = useState([]); // to show notification when a new message comes
     
 
     // when we created login and signu up we stored user info in local storage
@@ -38,7 +39,7 @@ const ChatProvider = ({children}) => {
 
     }, [history]);
 
-return <ChatContext.Provider value={{ user, setUser, chats, selectedChat, setSelectedChat, setChats}}>
+return <ChatContext.Provider value={{ user, setUser, chats, selectedChat, setSelectedChat, setChats, notification, setNotification}}>
     {children}
     </ChatContext.Provider>;
 }

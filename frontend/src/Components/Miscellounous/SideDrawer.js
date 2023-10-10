@@ -8,6 +8,7 @@ import {useState} from 'react';
 import ProfileModal from './ProfileModal';
 import { useHistory } from 'react-router-dom';
 import ChatLoading from './ChatLoading';
+import NotificationBadge, { Effect } from 'react-notification-badge';
 
 import {
     Drawer,
@@ -20,6 +21,7 @@ import {
   } from '@chakra-ui/react'
 
 import UserListItem from '../UserAvatar/UserListItem';
+import getSender from '../../config/ChatLogics';
 
 const SideDrawer = () => {
 
@@ -30,7 +32,7 @@ const SideDrawer = () => {
     const [loading, setLoading] = useState(false);
     const [loadingChat, setLoadingChat] = useState(false);
 
-    const {user, setSelectedChat, chats, setChats, selectedChat} = ChatState();
+    const {user, setSelectedChat, chats, setChats, selectedChat, notification, setNotification} = ChatState();
 
     const history = useHistory();
 
@@ -154,9 +156,31 @@ const SideDrawer = () => {
         <div>
             <Menu>
                 <MenuButton p={1} fontSize="2xl" m = {1} >
+                    <NotificationBadge 
+                        count={notification.length}
+                        effect={Effect.SCALE}
+                    />
                     <BellIcon />
                 </MenuButton>
-                {/* <MenuList></MenuList> */}
+                <MenuList pl={2}>
+                    {!notification.length && "No New Messages"}
+                    {notification.map((n) => (
+                        <MenuItem key={n._id}
+                            onClick={() => {
+                                setSelectedChat(n.chat);
+                                setNotification(notification.filter((not) => not._id !== n._id));
+                               // history.push(`/chat/${n.chat._id}`);
+                            }}
+                        >
+                            {n.chat.isGroupChat
+                             ? `New Message in ${n.chat.chatName}` 
+                             : `New Message from ${getSender(user, n.chat.users)}`}
+
+                        </MenuItem> 
+                        
+                        
+                    ))}
+                </MenuList>
             </Menu>
             <Menu>
             <MenuButton as = {Button} rightIcon={<ChevronDownIcon/>}  >
