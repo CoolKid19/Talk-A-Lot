@@ -243,7 +243,10 @@ const SingleChat = ({fetchAgain , setFetchAgain}) => {
           )}
 
           <FormControl onKeyDown={sendMessage} isRequired mt={3}>
-            {isTyping ? <div>Loading...</div> : <></>}
+            {/* {isTyping ? <div>Loading...</div> : <></>} */}
+            <Text display={isTyping?"flex":"none"} fontSize="sm" color="gray.500" pb={1} textAlign="center">
+                {getSender(user, selectedChat.users)} is typing...
+              </Text>
             <Input 
               variant="filled"
               bg = "#E0E0E0"
